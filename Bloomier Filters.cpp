@@ -76,12 +76,14 @@ void insert(int hashing_array[][2], int value, int selection)
 		{
 			int original_value = hashing_array[temp][0];
 			hashing_array[temp][0] = value;
+			hashing_array[temp][1] = selection;
 			insert(hashing_array, original_value, 2);
 		}
 		else
 		{
 			int original_value = hashing_array[temp][0];
 			hashing_array[temp][0] = value;
+			hashing_array[temp][1] = selection;
 			insert(hashing_array, original_value, 1);
 		}
 	}
