@@ -52,11 +52,11 @@ int hashing_function2(int x)
 	return sum;
 }
 
-void insert(int hashing_array[], int value, int hash_selection)
+void insert(int hashing_array[][2], int value, int selection)
 {
 	int temp;
 
-	if (hash_selection == 1)
+	if (selection == 1)
 	{
 		temp = hashing_function1(value);
 	}
@@ -65,29 +65,31 @@ void insert(int hashing_array[], int value, int hash_selection)
 		temp = hashing_function2(value);
 	}
 
-	if (hashing_array[temp] == 100)
+	if (hashing_array[temp][0] == 100)
 	{
-		hashing_array[temp] = value;
-		return;
+		hashing_array[temp][0] = value;
+		hashing_array[temp][1] = selection;
 	}
 	else
 	{
-		int original_value = hashing_array[temp];
-		hashing_array[temp] = value;
-
-		if (hash_selection == 1)
+		if (hashing_array[temp][1] == 1)
 		{
+			int original_value = hashing_array[temp][0];
+			hashing_array[temp][0] = value;
 			insert(hashing_array, original_value, 2);
 		}
 		else
 		{
+			int original_value = hashing_array[temp][0];
+			hashing_array[temp][0] = value;
 			insert(hashing_array, original_value, 1);
 		}
 	}
+
 	return;
 }
 
-bool query(int hashing_array[], int value)
+bool query(int hashing_array[][2], int value)
 {
 	int temp1 = hashing_function1(value);
 	int u1 = temp1;
@@ -95,7 +97,7 @@ bool query(int hashing_array[], int value)
 	int temp2 = hashing_function2(value);
 	int u2 = temp2;
 
-	if (hashing_array[u1] == value || hashing_array[u2] == value)
+	if (hashing_array[u1][0] == value || hashing_array[u2][0] == value)
 	{
 		return true;
 	}
@@ -127,11 +129,12 @@ int main()
    cout << endl;
 
    int hashing_array_size = 4 * sz;
-   int hashing_array[hashing_array_size];
+   int hashing_array[hashing_array_size][2];
 
    for (int j = 0; j < hashing_array_size; j++)
    {
-	   hashing_array[j] = 100;
+	   hashing_array[j][0] = 100;
+	   hashing_array[j][1] = 0;
    }
 
    for (int u = 0; u < sz; u++)
