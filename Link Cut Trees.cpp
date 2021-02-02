@@ -493,27 +493,26 @@ void cut(BinarySearchTree* base_tree, BinarySearchTree* target_tree, int v)
 	base_tree->root->left = NULL;
 }
 
-void link(LinkCutTree* overall_tree, BinarySearchTree* base_tree, BinarySearchTree* target_tree1, BinarySearchTree* target_tree2, int v, int w)
+void link(LinkCutTree* overall_tree, LinkCutTree* overall_tree1, BinarySearchTree* target_tree1, BinarySearchTree* target_tree2, int w, int v)
 {
-	access(target_tree1, v);
-	access(target_tree2, w);
+	access(target_tree2, v);
+	access(target_tree1, w);
 
-	splay(base_tree, 0);
+	target_tree1->path_parent_tree = target_tree2;
 
-	cout << "Root is " << base_tree->root->data << endl;
-	cout << "Root is " << base_tree->root->right->data << endl;
+	Node* current_node = target_tree2->root;
 
-	access_tree->root->left = base_tree->root;
-	base_tree->root->parent = access_tree->root;
+	while (current_node->left != NULL)
+	{
+		current_node = current_node->left;
+	}
 
-	overall_tree->root_tree = access_tree;
+	splay(target_tree1, current_node->data + 1); //Sets tree heights to ensure balance
 
-	//Delete(access_tree, 3);
+	target_tree1->root->left->parent = NULL; //Deletes values shallower than the root
+	target_tree1->root->left = NULL; //Deletes values shallower than the root
 
-	//base_tree->root->right = access_tree->root;
-	//access_tree->root->parent = base_tree->root;
-
-	//cout << "Linked Tree " << base_tree->root->right->data << endl;
+	target_tree1->path_parent = current_node;
 }
 // Driver code
 int main()
@@ -541,14 +540,31 @@ int main()
 
 	join(tree1, tree2);
 
+
+
+	LinkCutTree* overall_tree1 = new LinkCutTree();
+
 	BinarySearchTree* tree3 = new BinarySearchTree();
-	tree3->height = 2;
+	tree3->height = 0;
 	tree3->root = new Node();
 	tree3->root->data = 2;
-	tree3->root->node_name = 6;
+	tree3->root->node_name = 1;
 	Insert(tree3, tree3->root, 3, 0);
+	Insert(tree3, tree3->root, 1, 3);
+	Insert(tree3, tree3->root, 0, 5);
 
-	join(tree1, tree3);
+	overall_tree->root_tree = tree3;
+
+	BinarySearchTree* tree4 = new BinarySearchTree();
+	tree4->height = 2;
+	tree4->root = new Node();
+	tree4->root->data = 2;
+	tree4->root->node_name = 7;
+	Insert(tree4, tree4->root, 3, 0);
+
+	join(tree3, tree4);
+
+	//access(tree4, 3);
 
 	//access(tree2, 3);
 
@@ -558,7 +574,7 @@ int main()
 
 	//cut(tree1, tree2, 3);
 
-	link(overall_tree, overall_tree->root_tree, tree2, tree3, 3, 3);
+	link(overall_tree, overall_tree1, tree2, tree4, 3, 3);
 
 	//find(tree, tree->root, 1);
 
